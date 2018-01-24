@@ -4,19 +4,18 @@ VHDL coding style
 :Date:  2018-01-15
 :Revision: 0.1
 
-This document describes the VHDL coding style used at ohwr.org, however it was
-written to be universal and doesn't contain anything specific to ohwr.
-
 Introduction
 ------------
 
+Coding style (also named programming style) is a set of rules used when writing
+source code.  These rules specify aspects of free-form languages (like
+indentation, use of white-spaces...) and restrict the language
+
+This document describes a VHDL coding style. It was written to be
+universal and is currently being in used for many ohwr.org projects.
+
 This coding style is written assuming some general ideas:
 
-* Describing and checking coding style is boring, so it must be done with a
-  tool.  Rules should be written in such a way they could be mechanically
-  checked; rules that cannot must be the exception.
-  It is advised for users to read this document once; but they will learn it
-  by applying the tool on their code and by fixing the diagnostics.
 * Team spirit is important and coding style is one way to promote it.  So code
   should be as uniform as possible, so that anyone feels at home everywhere and
   can improve the code easily.  Of course, some designers know some parts much
@@ -30,6 +29,12 @@ This coding style is written assuming some general ideas:
   in this document.
 * This coding style has to stay alive.  A rule can be written with a very good
   intent, but practice may tell later that it isn't.
+* Describing and checking coding style is tedious, so the rules should
+  be checked by a tool.  Rules should be written in such a way they
+  could be mechanically checked; rules that cannot must be the
+  exception.  It is advised for users to read this document once; but
+  they will learn it by applying the tool on their code and by fixing
+  the diagnostics.
 
 
 Style Checker
@@ -44,13 +49,13 @@ violations.
 As many rules are about taste, people tend to accept diagnostics from a tool
 more easily than from a colleague.
 
-Some rules cannot be enforced by a tool (like meaningful names); but the number
-of such rule should be as low as possible.
+Some rules (like using meaningful names)cannot be enforced by a tool.  The
+number of such rules should be as limited as possible.
 
 Exemptions
 ----------
 
-It must be possible to have exemption to a rule at any place in a
+It must be possible to have exemption from a rule at any place in a
 file.  The designer knows the context better than a tool, and in some
 cases a rule is counter-productive.  The amount of exemptions must be
 as limited as possible and if an exemption is used many times this
@@ -75,43 +80,21 @@ sub-section has a fixed format:
 ----
 
 The title starts with a unique identifier, so that a tool can refer to a rule.
-A number could have been used instead, but they are subject to renumbering.
+A number could have been used instead, but they may be subject to renumbering.
 
 The status `[S]` describes how important the rule is:
 
 * `[M]` for mandatory.  It is highly unusual to not follow the rule.
 * `[R]` for recommended.  It is not unusual to have an exemption.
-* `[H]` for hint.  The rule describes a good practice.
 
-The short description can be followed by `(H)` when it is normally not possible
-to automatically check the rule.
+The short description can be followed by `(I)` when it is normally not possible
+to automatically check the rule and need manual inspection.
 
-The rule should have a rational to explain its origin.  Sometimes it is hard
-to justify a rule other by the existing practice.
+The rule should have a reason to explain its origin.
 
-The rules apply only to human written files.  Code automatically generated
-may not follow the rules before usually you cannot control the style of
+The rules apply only to human written files.  That is automatically generated
+code may not follow the rules because usually you cannot control the style of
 generated code.
-
-Document
---------
-
-The asciidoc file format was selected because:
-
-* the file can be read in raw form, annotations are very light
-* it could be rendered in html or pdf
-* vhdl syntax highlighting is supported (at least with the `hightlight` tool)
-* it is recognized by platforms like github
-
-We have also considered other formats; markdown rendering is not very good
-for books.
-
-This documention has a version to support changes.
-
-Changelog
----------
-
-* 11-01-2018: Initial Version, Tristan Gingold.
 
 Rules
 -----
@@ -122,8 +105,7 @@ Rules
 
 Synthesizable units must follow the VHDL-93 (IEEE 1076 1993) standard.
 
-Rational: Current practice.  The latest revision (2008) is not fully supported
-by all tools.
+Reason: The latest revision (2008) is not fully supported by all tools.
 
 ==== [NoUserAttributes] [M] Attribute declarations not allowed
 
@@ -132,7 +114,7 @@ It is not allowed to declare attributes, except for tool specific attributes.
 List of allowed attributes: `keep`, `shreg_extract`, `opt_mode`,
 `resource_sharing`, `altera_attribute`.
 
-Rational: The initial purpose of the attribute is to convey informations to a
+Reason: The initial purpose of the attribute is to convey informations to a
 tool.
 
 ==== [NoUserAttrName] [M] Attribute names
@@ -140,34 +122,42 @@ tool.
 The only attribute names allowed are those specified by the language.
 User attribute names are not allowed.
 
-Rational: Consequence of the previous rule (but extended to tool attribute).
+Reason: Consequence of the `NoUserAttributes` rule (but extended to
+tool attribute).
 
 ==== [EntityItems] [M] Entity declarative items
 
-No declarative items and no statements other than assertions are allowed in
-entity declarations.
+The only declarative items allowed in entity declarations are:
 
-Rational: Obscure features, but assertions may be used to document the
-interface.
+* attribute declarations
+* attribute declarations
+
+The only concurrent statement allowed in entity declarations is:
+
+* assertions
+
+Reason: Obscure features, but assertions may be used to document the
+interface, and the only place to specify attributes for ports and generics
+are within the entity declarations.
 
 ==== [NoCharEnumLit] [M] Character as enumeration literal
 
 All user defined enumeration must use names for literals.  Characters
 aren't allowed.
 
-Rational: Current practice; use of characters is always special.
+Reason: Use of characters is always special and reserved for bit and strings.
 
 ==== [GuardedSignals] [M] Guarded signals
 
 Guarded signals (bus or register signal kind) are not allowed.
 
-Rational: Usually not supported by synthesis tools.
+Reason: Usually not supported by synthesis tools.
 
 ==== [Disconnection] [M] Disconnection Specification
 
 Disconnection specifications are not allowed
 
-Rational: Useless and guarded signals are not allowed.
+Reason: Useless and guarded signals are not allowed.
 
 ==== [BlockStatement] [M] Block statements
 
@@ -175,26 +165,26 @@ Block statements can be used to group concurrent statements or to create
 a scope for declarations, but ports, generics and implicit GUARD signals are
 not allowed (therefore port maps and generic maps are also not allowed).
 
-Rational: Mostly useless features.
+Reason: Mostly useless features.
 
 ==== [GroupDeclaration] [M] Group and group template
 
 Group template declarations and group declarations are not allowed.
 
-Rational: Useless feature
+Reason: Useless feature
 
 ==== [PortMode] [M] Buffer and linkage mode
 
 The modes `linkage` and `buffer` are not allowed.
 If you need to read from an output port, use an intermediate signal.
 
-Rational: Obscure features.
+Reason: Obscure features.
 
 ==== [ConfigSpec] [M] Configuration specification
 
 Configuration specifications are not allowed.
 
-Rational: Obscure and mostly useless feature.
+Reason: Obscure and mostly useless feature.
 
 ==== [RemovedSynth] [M] Language features not allowed for synthesis
 
@@ -206,7 +196,7 @@ These following features must not be used for synthesizable units:
 * New integer and physical type declaration.
 * Wait statement.
 
-Rational: They are often not supported by synthesis tools.
+Reason: They are often not supported by synthesis tools.
 
 === File rules
 
@@ -215,7 +205,7 @@ Rational: They are often not supported by synthesis tools.
 The name of the file is the name of the first design unit (using exactly the
 same casing) followed by the `.vhd` extension.
 
-Rational: It makes search of a unit easier.  The extension is the current
+Reason: It makes search of a unit easier.  The extension is the current
 practice (from the DOS 3 letters for extension area).  It should be noted that
 `vhd` is often confused with the extension for virtual hard disk.
 
@@ -229,7 +219,7 @@ A VHDL file may contains either:
 * a package declaration (if there is no body)
 * a package declaration and its body.
 
-Rational: Simplify the search of a unit.  It should be noted that synthesis
+Reason: Simplify the search of a unit.  It should be noted that synthesis
 tools don't support well multiple architectures and configurations.
 
 ==== [FileHeader] [M] Header comment of a VHDL file
@@ -264,27 +254,29 @@ content of the file and the license.  The template of this comment is:
   -----------------------------------------------------------------------------
 ----
 
-Rational: Current practice.
+Reason: Trade-off.  Name of the author does not appear because it does not
+bring anything, because it is not clear when a contributor becomes an author,
+and because the versioning control system tracks the authors of the changes.
 
 ==== [LineLength] [M] Source line length
 
 The recommended line length is 100 characters (without the end of line), and the
 maximum is 132 characters.
 
-Rational: People often have a fixed setup of editor windows.
+Reason: People often have a fixed setup of editor windows.
 
 ==== [EndOfLine] [M] End of line
 
 The end of line is the single LF character (aka '\n') to follow the Unix
 convention.
 
-Rational: Current practice.
+Reason: Most users develop on Linux.
 
-==== [Language] [M] Language for comments and identifiers (H)
+==== [Language] [M] Language for comments and identifiers (I)
 
 Always use English for comments and identifiers.
 
-Rational: Maximalize usuability
+Reason: Maximalize usuability
 
 ==== [CharSet] [M] Character set
 
@@ -292,21 +284,21 @@ Restrict to plain 7-bit ASCII codeset.  The only control character allowed is
 the end of line marker (LF).  If you need to write a non-English word, use its
 transliteration and remove accents.
 
-Rational: ASCII is universal, other code sets need an encoding.
+Reason: ASCII is universal, other code sets need an encoding.
 
 ==== [NoTAB] [M] No tabulation
 
 As a consequence of the previous rule, horizontal tabulations (HT) are not
 allowed.
 
-Rational: The rendering of HT is not completly fixed.
+Reason: The rendering of HT is not completly fixed.
 
 ==== [LastLine] [M] Last line in a file
 
 The last line must finish with an end of line, and must not be empty.  So blank
 lines at the end are not allowed.
 
-Rational: Blank lines at the end are useless and removed by many editors. Git
+Reason: Blank lines at the end are useless and removed by many editors. Git
 complains if the file ends with two end of line characters.
 
 ==== [TrailingSpaces] [M] Trailing spaces
@@ -314,7 +306,7 @@ complains if the file ends with two end of line characters.
 The last character (if any) before the end of line must not be a space.  So
 trailing spaces are not allowed.
 
-Rational: Trailing spaces may not be visible, are often removed by editors.
+Reason: Trailing spaces may not be visible, are often removed by editors.
 
 
 === Format rules
@@ -323,7 +315,7 @@ Rational: Trailing spaces may not be visible, are often removed by editors.
 
 Keywords (VHDL reserved identifiers) must be written in lower case.
 
-Rational: Current and usual practice.
+Reason: Lower cases is common.
 
 ==== [Comments] [M] Comment style
 
@@ -343,7 +335,7 @@ start on the first column.
      constant c : natural := 25; -- This is an inline comment
 ----
 
-Rational: Current practice.
+Reason: Allow inline comments and boxes.
 
 ==== [Indentation] [M] Indentation
 
@@ -353,7 +345,8 @@ The indentation is two spaces.  Identation is used:
 * for nested concurrent or sequential statements
 * for the second and later lines of a multi-line declaration or statement.
 
-Rational: Current practice.
+Reason: Indentation makes code structure clearer; 2 spaces is an
+historical choice.
 
 ==== [WhiteSpaces] [M] Spaces
 
@@ -386,6 +379,8 @@ Examples:
 
   std_logic_vector(to_unsigned(i+1, 4))
 ----
+
+Reason: Try to follow common punctuation rules.
 
 ==== [Context] [M] Context clauses
 
@@ -422,13 +417,13 @@ use proj_pci.pci_defs.all;
 use work.my_pkg.all;
 ----
 
-Rational: Makes search of dependencies easier.
+Reason: Makes search of dependencies easier.
 
 ==== [UseClause] [M] Place of use clause
 
 Use clause are not allowed outside of context clauses.
 
-Rational: Makes search of dependencies easier.
+Reason: Makes search of dependencies easier.
 
 ==== [IEEEPkg] [M] Use of IEEE packages
 
@@ -449,16 +444,16 @@ From `std_logic_misc`, only the reduce functions can be used.
 In particular, `std_logic_unsigned`, `std_logic_signed` and `std_logic_arith`
 are not allowed. Simply use `numeric_std` instead.
 
-Rational: Makes the code more portable.
+Reason: Makes the code more portable.
 
 ==== [Identifiers] [M] Identifiers case
 
 In general, identifiers should be written in lower case with the exception of
 acronyms.
 
-Rational: Current practice, also common in other languages.
+Reason: Common practice even for normal texts.
 
-==== [Underscores] [M] Use of underscore in identifiers (H)
+==== [Underscores] [M] Use of underscore in identifiers (I)
 
 If an identifier is composed of words, they should be separated by an
 underscore.  Don't use CamelCase (compound words such as each word
@@ -471,7 +466,7 @@ Example:
 counter_gate
 ----
 
-Rational: More readable.
+Reason: Use of underscore is more readable than CamelCase.
 
 ==== [EntityLayout] [M] Format of entity declaration
 
@@ -507,26 +502,28 @@ Example:
   generic (g_simulation         : boolean                        := False);
 ----
 
-Rational: Common practice.
+Reason: Alignment makes code easier to read.
 
 ==== [ArchNames] [M] Architectures name
 
 The name of architecture must be 'arch'. In the particular case of multiple
 architectures (like per vendor architectures), other names are allowed.
 
-Rational: Common practice.
+Reason: Neutral name that supports any implementation (behavioural,
+structural, rtl, ...) style.
 
 ==== [Constants] [M] Constants name
 
 Constant declaration identifiers should be in UPPER case, with a 'c_' prefix.
 
-Rational: Somewhat follows the C convention, current practice.
+Reason: Follows the C convention, and clearly make the difference between
+constants and generics.
 
 ==== [GenericsName] [M] Generics name
 
 Generic identifiers should also be in UPPER case, with the 'g_' prefix.
 
-Rational: Somewhat follows the C convention, current practice.
+Reason: Same as the `Constants` rule.
 
 ==== [PortsName] [M] Ports name
 
@@ -539,7 +536,8 @@ a suffix:
 
 The suffix must be the last one.
 
-Rational: Current practice.
+Reason: Helps to specify the purpose of a port, makes the dataflow more
+obvious.
 
 ==== [SignalsName] [M] Signals name
 
@@ -566,13 +564,15 @@ Delayed signals must have the '_d' suffix. If you have more than one cycle,
 then you can either put an index ('_d1', '_d2', ...) or create a vector starting
 from index 1.
 
-Rational: Current practice.
+Reason: Purpose of clock and reset signals are therefore made obvious, semantic
+of active-low signals is also made obvious.  Avoid to create funny names for
+pulses and delayed signals.
 
 ==== [TypesName] [M] Types name
 
 User declared types and subtypes must have the 't_' prefix.
 
-Rational: Current practice.
+Reason: Makes purpose of the type more obvious.
 
 ==== [PackageName] [M] Packages name
 
@@ -581,14 +581,14 @@ No entity can have that suffix.
 
 As a consequence, the filename for a package also finishes with '_pkg'.
 
-Rational: Makes the identification easier.
+Reason: Makes the identification easier.
 
 ==== [ReferenceName] [M] Reference
 
 When an identifier references a named entity, it must have exactly the same
 casing (even if VHDL is case insensitive).
 
-Rational: Coherence.
+Reason: Coherence.
 
 ==== [ComplexStmtLayout] [M] Layout of complex statements
 
@@ -651,7 +651,7 @@ Example
 ----
 
 
-Rational: Makes easier to identify nested statements.
+Reason: Makes easier to identify nested statements.
 
 ==== [BeginEndLayout] [M] Layout of begin/end keywords
 
@@ -686,6 +686,8 @@ Examples:
   end pack;
 ----
 
+Reason: Usual indentation rule.
+
 ==== [EndLabel] [M] Presence of the label after end
 
 If a construct has a label, it must appear again at the end of the
@@ -704,7 +706,7 @@ construct (when allowed by the language).  This is required for:
 * process statements
 * generate statements
 
-Rational: Makes navigation easier.
+Reason: Makes navigation easier.
 
 ==== [Instantiation] [M] Layout of instantiation
 
@@ -729,17 +731,16 @@ Example:
       ppulse_o => gate_p);
 ----
 
+Reason: Makes code more readable.
 
 ==== [ProcessLabel] [M] Label of processes
 
 Each process statement must either have a label (which clearly indicates its
 purpose) or a comment just before the statement.
 
-Rational: A short label might be as describing as a long sentence.
+Reason: A short label might be as describing as a long sentence.
 
-==== [Comments] [M] Comments (H)
-
-Comments must be written in English.
+==== [Comments] [M] Comments (I)
 
 It is clearer to have dedicated lines for comments; but it is possible to
 have a very short comment at the end of a line (after VHDL code) to give
@@ -756,7 +757,7 @@ a hint.
   v_next := v;  -- Keep current value
 ----
 
-Rational: Current practice.
+Reason: Inline comments are often useful.
 
 ==== [Parenthesis] [M] Use of parenthesis in expressions
 
@@ -767,7 +768,7 @@ arithmetic operations is used ( `*`, `/`, `+`, `-`).
 Parenthesis around conditions in `if` and `while` statements
 must not be used, unless the condition spans on multiple lines.
 
-Rational: Avoid to make expression larger than needed.
+Reason: Avoid to make expression larger than needed.
 
 === Synthesis rules
 
@@ -780,7 +781,7 @@ or `std_logic_vector`, or a user-defined bounded composite type (array or
 record) composed of these types. This excludes `signed`, `unsigned` or `bit`
 types.
 
-Rational: Makes interfacing with verilog much easier.  Standard practice.
+Reason: Makes interfacing with verilog much easier.  Standard practice.
 
 ==== [GenericType] [M] Type of top-levels generics
 
@@ -788,7 +789,7 @@ The type of a top-level generic must be either `string`, `integer`, `boolean`,
 `std_logic`, `std_logic_vector`, an enumerated types, or a user-defined bounded
 composite type of these types.
 
-Rational: Same as [PortsType]
+Reason: Same as `PortsType`
 
 ==== [WrapperUnit] [R] Wrapper of top-level units
 
@@ -806,7 +807,7 @@ output signals. The records should be declared in a package.
 The default top-level entity should be the wrapped version, the un-wrapped
 version must only unwrap the signals.
 
-Rational: As Verilog is deprecated in favour to SystemVerilog, the
+Reason: As Verilog is deprecated in favour to SystemVerilog, the
 wrapped unit should be the default.
 
 ==== [RegisterTemplate] [R] Process for a register.
@@ -835,28 +836,29 @@ The sensitivity list is composed of only the clock.  The process has one
 The `if` statement has one `if` statement to reset the registers and do
 the computation.
 
-Rational: Current practice.
+Reason: This is the simplest way to create a register.  Having one way makes
+register identification easier.
 
 ==== [AsyncReset] [M] Asynchronous reset
 
 If the reset is asynchronous, it must be synchronously deasserted.
 
-Rational: simplify timing analysis, as the asynchronous reset could then be
-considered as a normal signal.
+Reason: This simplifies timing analysis, as the asynchronous reset could then
+be considered as a normal signal.
 
 ==== [RegisterReset] [M] Register reset
 
 All registers must be initialized during reset
 
-Rational: In an FPGA, it takes no additional resources and gives a
-known initial values.
+Reason: In an FPGA, it takes no additional resources and gives a known initial
+values.
 
 ==== [SignalAttribute] [M] Signal attributes
 
 Don't use signal attributes (Event, Active, Delayed...) for synthesis.  Use
 function `rising_edge` (and maybe `falling_edge`).
 
-Rational: Makes code shorter and more uniform.
+Reason: Makes code shorter and more uniform.
 
 ==== [VectorDirection] [M] Direction of indexes
 
@@ -864,20 +866,20 @@ When declaring subtypes of `std_logic_vector`, use the `downto` direction.
 You can use the `to` direction to declare RAMs (arrays of std_logic_vector) or
 other arrays.
 
-Rational: Avoid null ranges.
+Reason: Avoid null ranges.
 
 ==== [EmptyArray] [M] Minimal length of arrays
 
 Do not declare arrays of length 0 or 1 (unless the bounds are computed).
 
-Rational: Confusing and useless in general.
+Reason: Confusing and useless in general.
 
 ==== [ClockResetPorts] [M] Clock and reset ports
 
 When clock and reset signals are in a ports list, the main clock must
 be the first port, the main reset must be the second port.
 
-Rational: Makes identification easier.
+Reason: Makes identification easier.
 
 ==== [ClocksUse] [M] Usage of clocks
 
@@ -885,7 +887,7 @@ Clocks must only be used in component associations or within `rising_edge` or
 `falling_edge`.  Logics on clocks are not allowed, except in special and
 commented cases.
 
-Rational: Synchronous design good practice.
+Reason: Synchronous design good practice.
 
 ==== [FSMCoding] [R] FSM code style
 
@@ -900,6 +902,8 @@ implementation:
  can handle the register (assign current state from next state on clock edge),
  and the second process can compute next state and the outputs.
 
+Reason: Do not make code more complex than needed.
+
 Appendix: Example
 -----------------
 
@@ -912,3 +916,26 @@ Possible future rules:
 
 * Require counter-generate for undriven out ports
 * Do not allow unused declarations
+
+Appendix: Document format
+-------------------------
+
+The asciidoc file format was selected because:
+
+* the file can be read in raw form, annotations are very light
+* it could be rendered in html or pdf
+* vhdl syntax highlighting is supported (at least with the `hightlight` tool)
+* it is recognized by platforms like github
+
+We have also considered other formats; markdown rendering is not very good
+for books.
+
+Rules are described so that the list of the rules and the list of rules to
+be manually checked can be easily extracted from this document.
+
+See the `Makefile` for creating a pdf or an html page.
+
+Appendix: Changelog
+-------------------
+
+* 11-01-2018: Initial Version, Tristan Gingold.
