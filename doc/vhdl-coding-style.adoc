@@ -143,7 +143,7 @@ are within the entity declarations.
 ==== [NoCharEnumLit] [M] Character as enumeration literal
 
 All user defined enumeration must use names for literals.  Characters
-aren't allowed.
+are not allowed.
 
 Reason: Use of characters is always special and reserved for bit and strings.
 
@@ -155,15 +155,16 @@ Reason: Usually not supported by synthesis tools.
 
 ==== [Disconnection] [M] Disconnection Specification
 
-Disconnection specifications are not allowed
+Disconnection specifications are not allowed.
 
 Reason: Useless and guarded signals are not allowed.
 
 ==== [BlockStatement] [M] Block statements
 
-Block statements can be used to group concurrent statements or to create
-a scope for declarations, but ports, generics and implicit GUARD signals are
-not allowed (therefore port maps and generic maps are also not allowed).
+Block statements can be used to group concurrent statements or to
+create a scope for declarations. Ports, generics and implicit GUARD
+signals are not allowed in block statements (therefore port maps and
+generic maps are also not allowed).
 
 Reason: Mostly useless features.
 
@@ -220,7 +221,7 @@ A VHDL file may contains either:
 * a package declaration and its body.
 
 Reason: Simplify the search of a unit.  It should be noted that synthesis
-tools don't support well multiple architectures and configurations.
+tools do not support well multiple architectures and configurations.
 
 ==== [FileHeader] [M] Header comment of a VHDL file
 
@@ -442,7 +443,7 @@ The only IEEE packages allowed are:
 From `std_logic_misc`, only the reduce functions can be used.
 
 In particular, `std_logic_unsigned`, `std_logic_signed` and `std_logic_arith`
-are not allowed. Simply use `numeric_std` instead.
+are not allowed. Use `numeric_std` instead.
 
 Reason: Makes the code more portable.
 
@@ -456,7 +457,7 @@ Reason: Common practice even for normal texts.
 ==== [Underscores] [M] Use of underscore in identifiers (I)
 
 If an identifier is composed of words, they should be separated by an
-underscore.  Don't use CamelCase (compound words such as each word
+underscore.  Do not use CamelCase (compound words such as each word
 begins with a capital letter without any space or underscore between
 words).
 
@@ -478,7 +479,7 @@ of generics (sequence of comment and generic declarations without any empty
 line), the name, the colon, the type, and the default value (if present)
 must be aligned.  Likewise for ports.
 
-There must be a new line after the first `(` but not before the last `)`.
+There must be a new line after the first `'('` but not before the last `')'`.
 
 If there is only one generic (or one port), it is allowed to have the
 declaration on the same line as `generic` or `port`.
@@ -489,8 +490,7 @@ Example:
 [source]
 ----
   generic (
-    -- if set to 1, then blocks in PCS use smaller calibration counter to
-    -- speed up simulation
+    -- If set to 1, then use small calibration counter to speed up simulation
     g_simulation                : integer                        := 0;
     g_with_external_clock_input : boolean                        := true;
     --
@@ -499,7 +499,7 @@ Example:
 
 [source]
 ----
-  generic (g_simulation         : boolean                        := False);
+  generic (g_simulation         : boolean                        := false);
 ----
 
 Reason: Alignment makes code easier to read.
@@ -601,13 +601,13 @@ Example:
 [source]
 ----
   if condition1 then
-    stmts;
+    ...
   elsif condition2 then
-    stmts;
+    ...
   elsif (this_is_a_very_long_condition
         and with_another_very_long_condition)
   then
-    stmts;
+    ...
   end if;
 ----
 
@@ -620,7 +620,7 @@ Example:
 [source]
 ----
   for i in arr'range loop
-    stmts;
+    ...
   end loop;
 ----
 
@@ -635,9 +635,9 @@ Example
 ----
   case state is
     when S_INIT =>
-      stmts1;
+      ...
     when S_S1 | S_S2 =>
-      stmts2;
+      ...
   end case;
 ----
 
@@ -669,7 +669,7 @@ Examples:
   procedure pack
     (signal din : t_data_type) is
   begin
-    stmts;
+    ...
   end pack;
 ----
 
@@ -682,7 +682,7 @@ Examples:
   is
     constant c_CST : natural := 5;
   begin
-    stmts;
+    ...
   end pack;
 ----
 
@@ -690,8 +690,8 @@ Reason: Usual indentation rule.
 
 ==== [EndLabel] [M] Presence of the label after end
 
-If a construct has a label, it must appear again at the end of the
-construct (when allowed by the language).  This is required for:
+In following constructs, the `end` must be followed by the name of the
+construct:
 
 * entity declarations
 * package declarations and bodies
@@ -705,6 +705,15 @@ construct (when allowed by the language).  This is required for:
 * block statements
 * process statements
 * generate statements
+
+Example:
+[source]
+----
+  function atoi (str : string) return natural is
+  begin
+    ...
+  end atoi;
+----
 
 Reason: Makes navigation easier.
 
@@ -762,7 +771,7 @@ Reason: Inline comments are often useful.
 ==== [Parenthesis] [M] Use of parenthesis in expressions
 
 Parenthesis in expressions are used to make evaluation order explicit.
-You don't need explicit parenthesis when the normal order of
+You do not need explicit parenthesis when the normal order of
 arithmetic operations is used ( `*`, `/`, `+`, `-`).
 
 Parenthesis around conditions in `if` and `while` statements
@@ -795,7 +804,7 @@ Reason: Same as `PortsType`
 
 It is convenient to group bus signals in records as this
 reduces the number of connections.  But other HDL languages (in
-particular Verilog) don't have any equivalent feature for records.
+particular Verilog) do not have any equivalent feature for records.
 
 So there can be two versions of the top-level unit: a wrapped one and a
 non-wrapped one.  The name of the wrapped unit is the name of the normal
@@ -812,7 +821,7 @@ wrapped unit should be the default.
 
 ==== [RegisterTemplate] [R] Process for a register.
 
-Use only flip-flop triggered on the positive edge of the clock and with
+Use only registers triggered on the positive edge of the clock and with
 a synchronous reset.
 
 Write it using this template:
@@ -851,11 +860,11 @@ be considered as a normal signal.
 All registers must be initialized during reset
 
 Reason: In an FPGA, it takes no additional resources and gives a known initial
-values.
+value.
 
 ==== [SignalAttribute] [M] Signal attributes
 
-Don't use signal attributes (Event, Active, Delayed...) for synthesis.  Use
+Do not use signal attributes (Event, Active, Delayed...) for synthesis.  Use
 function `rising_edge` (and maybe `falling_edge`).
 
 Reason: Makes code shorter and more uniform.
@@ -900,7 +909,7 @@ implementation:
 * If outputs are a function of the current state and of the current inputs,
  the FSM can be written using two processes (Mealy machine). The first process
  can handle the register (assign current state from next state on clock edge),
- and the second process can compute next state and the outputs.
+ and the second process can compute the next state and the outputs.
 
 Reason: Do not make code more complex than needed.
 
