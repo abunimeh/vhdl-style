@@ -99,106 +99,6 @@ generated code.
 Rules
 -----
 
-=== Language subset
-
-==== [VHDLVersion] [M] VHDL standard version
-
-Synthesizable units must follow the VHDL-93 (IEEE 1076 1993) standard.
-
-Reason: The latest revision (2008) is not fully supported by all tools.
-
-==== [NoUserAttributes] [M] Attribute declarations not allowed
-
-It is not allowed to declare attributes, except for tool specific attributes.
-
-List of allowed attributes: `keep`, `shreg_extract`, `opt_mode`,
-`resource_sharing`, `altera_attribute`.
-
-Reason: The initial purpose of the attribute is to convey informations to a
-tool.
-
-==== [NoUserAttrName] [M] Attribute names
-
-The only attribute names allowed are those specified by the language.
-User attribute names are not allowed.
-
-Reason: Consequence of the `NoUserAttributes` rule (but extended to
-tool attribute).
-
-==== [EntityItems] [M] Entity declarative items
-
-The only declarative items allowed in entity declarations are:
-
-* attribute declarations
-* attribute declarations
-
-The only concurrent statement allowed in entity declarations is:
-
-* assertions
-
-Reason: Obscure features, but assertions may be used to document the
-interface, and the only place to specify attributes for ports and generics
-are within the entity declarations.
-
-==== [NoCharEnumLit] [M] Character as enumeration literal
-
-All user defined enumeration must use names for literals.  Characters
-are not allowed.
-
-Reason: Use of characters is always special and reserved for bit and strings.
-
-==== [GuardedSignals] [M] Guarded signals
-
-Guarded signals (bus or register signal kind) are not allowed.
-
-Reason: Usually not supported by synthesis tools.
-
-==== [Disconnection] [M] Disconnection Specification
-
-Disconnection specifications are not allowed.
-
-Reason: Useless and guarded signals are not allowed.
-
-==== [BlockStatement] [M] Block statements
-
-Block statements can be used to group concurrent statements or to
-create a scope for declarations. Ports, generics and implicit GUARD
-signals are not allowed in block statements (therefore port maps and
-generic maps are also not allowed).
-
-Reason: Mostly useless features.
-
-==== [GroupDeclaration] [M] Group and group template
-
-Group template declarations and group declarations are not allowed.
-
-Reason: Useless feature
-
-==== [PortMode] [M] Buffer and linkage mode
-
-The modes `linkage` and `buffer` are not allowed.
-If you need to read from an output port, use an intermediate signal.
-
-Reason: Obscure features.
-
-==== [ConfigSpec] [M] Configuration specification
-
-Configuration specifications are not allowed.
-
-Reason: Obscure and mostly useless feature.
-
-==== [RemovedSynth] [M] Language features not allowed for synthesis
-
-These following features must not be used for synthesizable units:
-
-* Configuration declarations for synthesis.
-* Function declarations with an operator symbol.
-* Resolution function other than resolved defined in ieee.std_logic_1164.
-* New integer and physical type declaration.
-* Wait statement.
-
-Reason: They are often not supported by synthesis tools.
-
 === File rules
 
 ==== [FileName] [M] Name of VHDL file
@@ -312,13 +212,22 @@ Reason: Trailing spaces may not be visible, are often removed by editors.
 
 === Format rules
 
-==== [Keywords] [M] Keywords casing
-
-Keywords (VHDL reserved identifiers) must be written in lower case.
-
-Reason: Lower cases is common.
-
 ==== [Comments] [M] Comment style
+
+It is clearer to have dedicated lines for comments; but it is possible to
+have a very short comment at the end of a line (after VHDL code) to give
+a hint.
+
+[source]
+----
+  -- This comment is for the variable
+  variable v : natural
+----
+
+[source]
+----
+  v_next := v;  -- Keep current value
+----
 
 Comments starts with `--`. For inline comments, there must be at least one
 space before the double dash.
@@ -426,50 +335,7 @@ Use clause are not allowed outside of context clauses.
 
 Reason: Makes search of dependencies easier.
 
-==== [IEEEPkg] [M] Use of IEEE packages
-
-The only IEEE packages allowed are:
-
-* std_logic_1164
-* numeric_std
-* numeric_bit
-* math_real
-* math_complex
-* std_logic_misc
-* std_logic_textio
-
-(Note that the last two ones are not standard when VHDL-93 was defined).
-
-From `std_logic_misc`, only the reduce functions can be used.
-
-In particular, `std_logic_unsigned`, `std_logic_signed` and `std_logic_arith`
-are not allowed. Use `numeric_std` instead.
-
-Reason: Makes the code more portable.
-
-==== [Identifiers] [M] Identifiers case
-
-In general, identifiers should be written in lower case with the exception of
-acronyms.
-
-Reason: Common practice even for normal texts.
-
-==== [Underscores] [M] Use of underscore in identifiers (I)
-
-If an identifier is composed of words, they should be separated by an
-underscore.  Do not use CamelCase (compound words such as each word
-begins with a capital letter without any space or underscore between
-words).
-
-Example:
-[source]
-----
-counter_gate
-----
-
-Reason: Use of underscore is more readable than CamelCase.
-
-==== [EntityLayout] [M] Format of entity declaration
+==== [EntityLayout] [M] Layout of entity declaration
 
 An entity declaration must be: `entity`, space, entity name, space,
 `is`, newline.
@@ -503,92 +369,6 @@ Example:
 ----
 
 Reason: Alignment makes code easier to read.
-
-==== [ArchNames] [M] Architectures name
-
-The name of architecture must be 'arch'. In the particular case of multiple
-architectures (like per vendor architectures), other names are allowed.
-
-Reason: Neutral name that supports any implementation (behavioural,
-structural, rtl, ...) style.
-
-==== [Constants] [M] Constants name
-
-Constant declaration identifiers should be in UPPER case, with a 'c_' prefix.
-
-Reason: Follows the C convention, and clearly make the difference between
-constants and generics.
-
-==== [GenericsName] [M] Generics name
-
-Generic identifiers should also be in UPPER case, with the 'g_' prefix.
-
-Reason: Same as the `Constants` rule.
-
-==== [PortsName] [M] Ports name
-
-Ports name must be in lower case (as ruled by Identifiers), but must also have
-a suffix:
-
-* '_i' for normal input.
-* '_o' for normal output.
-* '_b' for bidirectional port.
-
-The suffix must be the last one.
-
-Reason: Helps to specify the purpose of a port, makes the dataflow more
-obvious.
-
-==== [SignalsName] [M] Signals name
-
-Clock signals (and ports) must have the 'clk_' prefix. In case of multiple
-clocks, the 'clk_' prefix is followed by the clock domain name and the
-frequency if known.
-
-Reset signals (and ports) must begin with the 'rst_' prefix. In case of multiple
-clocks, there should be one reset per clock, and the 'rst_' prefix is followed
-by the clock domain name. Each reset signal is synchronized with its clock.
-
-[source]
-----
-  rst_n      : in std_logic;
-  rst_clk2_n : in std_logic;
-----
-
-Active-low signals (and ports) must have the '_n' suffix (first suffix).
-Asynchronous signals (and ports) must have the '_a' (before '_n').
-
-If a pulse signal is derived from another signal, it should have a '_p' suffix.
-
-Delayed signals must have the '_d' suffix. If you have more than one cycle,
-then you can either put an index ('_d1', '_d2', ...) or create a vector starting
-from index 1.
-
-Reason: Purpose of clock and reset signals are therefore made obvious, semantic
-of active-low signals is also made obvious.  Avoid to create funny names for
-pulses and delayed signals.
-
-==== [TypesName] [M] Types name
-
-User declared types and subtypes must have the 't_' prefix.
-
-Reason: Makes purpose of the type more obvious.
-
-==== [PackageName] [M] Packages name
-
-The name of packages must have the '_pkg' suffix.
-No entity can have that suffix.
-
-As a consequence, the filename for a package also finishes with '_pkg'.
-
-Reason: Makes the identification easier.
-
-==== [ReferenceName] [M] Reference
-
-When an identifier references a named entity, it must have exactly the same
-casing (even if VHDL is case insensitive).
-
-Reason: Coherence.
 
 ==== [ComplexStmtLayout] [M] Layout of complex statements
 
@@ -749,25 +529,6 @@ purpose) or a comment just before the statement.
 
 Reason: A short label might be as describing as a long sentence.
 
-==== [Comments] [M] Comments (I)
-
-It is clearer to have dedicated lines for comments; but it is possible to
-have a very short comment at the end of a line (after VHDL code) to give
-a hint.
-
-[source]
-----
-  -- This comment is for the variable
-  variable v : natural
-----
-
-[source]
-----
-  v_next := v;  -- Keep current value
-----
-
-Reason: Inline comments are often useful.
-
 ==== [Parenthesis] [M] Use of parenthesis in expressions
 
 Parenthesis in expressions are used to make evaluation order explicit.
@@ -779,7 +540,247 @@ must not be used, unless the condition spans on multiple lines.
 
 Reason: Avoid to make expression larger than needed.
 
+
+=== Identifiers
+
+==== [Keywords] [M] Keywords case
+
+Keywords (VHDL reserved identifiers) must be written in lower case.
+
+Reason: Lower cases is common.
+
+==== [Identifiers] [M] Identifiers case (I)
+
+In general, identifiers should be written in lower case with the exception of
+acronyms.
+
+Reason: Common practice even for normal texts.
+
+==== [Underscores] [M] Use of underscore in identifiers (I)
+
+If an identifier is composed of words, they should be separated by an
+underscore.  Do not use CamelCase (compound words such as each word
+begins with a capital letter without any space or underscore between
+words).
+
+Example:
+[source]
+----
+counter_gate
+----
+
+Reason: Use of underscore is more readable than CamelCase.
+
+==== [ReferenceName] [M] Reference
+
+When an identifier references a named entity, it must have exactly the same
+casing (even if VHDL is case insensitive).
+
+Reason: Coherence.
+
+==== [ArchNames] [M] Architectures name
+
+The name of architecture must be 'arch'. In the particular case of multiple
+architectures (like per vendor architectures), other names are allowed.
+
+Reason: Neutral name that supports any implementation (behavioural,
+structural, rtl, ...) style.
+
+==== [Constants] [M] Constants name
+
+Constant declaration identifiers should be in UPPER case, with a 'c_' prefix.
+
+Reason: Follows the C convention, and clearly make the difference between
+constants and generics.
+
+==== [GenericsName] [M] Generics name
+
+Generic identifiers should also be in UPPER case, with the 'g_' prefix.
+
+Reason: Same as the `Constants` rule.
+
+==== [PortsName] [M] Ports name
+
+Ports name must be in lower case (as ruled by Identifiers), but must also have
+a suffix:
+
+* '_i' for normal input.
+* '_o' for normal output.
+* '_b' for bidirectional port.
+
+The suffix must be the last one.
+
+Reason: Helps to specify the purpose of a port, makes the dataflow more
+obvious.
+
+==== [SignalsName] [M] Signals name
+
+Clock signals (and ports) must have the 'clk_' prefix. In case of multiple
+clocks, the 'clk_' prefix is followed by the clock domain name and the
+frequency if known.
+
+Reset signals (and ports) must begin with the 'rst_' prefix. In case of multiple
+clocks, there should be one reset per clock, and the 'rst_' prefix is followed
+by the clock domain name. Each reset signal is synchronized with its clock.
+
+[source]
+----
+  rst_n      : in std_logic;
+  rst_clk2_n : in std_logic;
+----
+
+Active-low signals (and ports) must have the '_n' suffix (first suffix).
+Asynchronous signals (and ports) must have the '_a' (before '_n').
+
+If a pulse signal is derived from another signal, it should have a '_p' suffix.
+
+Delayed signals must have the '_d' suffix. If you have more than one cycle,
+then you can either put an index ('_d1', '_d2', ...) or create a vector starting
+from index 1.
+
+Reason: Purpose of clock and reset signals are therefore made obvious, semantic
+of active-low signals is also made obvious.  Avoid to create funny names for
+pulses and delayed signals.
+
+==== [TypesName] [M] Types name
+
+User declared types and subtypes must have the 't_' prefix.
+
+Reason: Makes purpose of the type more obvious.
+
+==== [PackageName] [M] Packages name
+
+The name of packages must have the '_pkg' suffix.
+No entity can have that suffix.
+
+As a consequence, the filename for a package also finishes with '_pkg'.
+
+Reason: Makes the identification easier.
+
+
+=== Language subset
+
+==== [VHDLVersion] [M] VHDL standard version
+
+Synthesizable units must follow the VHDL-93 (IEEE 1076 1993) standard.
+
+Reason: The latest revision (2008) is not fully supported by all tools.
+
+==== [IEEEPkg] [M] Use of IEEE packages
+
+The only IEEE packages allowed are:
+
+* std_logic_1164
+* numeric_std
+* numeric_bit
+* math_real
+* math_complex
+* std_logic_misc
+* std_logic_textio
+
+(Note that the last two ones are not standard when VHDL-93 was defined).
+
+From `std_logic_misc`, only the reduce functions can be used.
+
+In particular, `std_logic_unsigned`, `std_logic_signed` and `std_logic_arith`
+are not allowed. Use `numeric_std` instead.
+
+Reason: Makes the code more portable.
+
+==== [NoUserAttributes] [M] Attribute declarations not allowed
+
+It is not allowed to declare attributes, except for tool specific attributes.
+
+List of allowed attributes: `keep`, `shreg_extract`, `opt_mode`,
+`resource_sharing`, `altera_attribute`.
+
+Reason: The initial purpose of the attribute is to convey informations to a
+tool.
+
+==== [NoUserAttrName] [M] Attribute names
+
+The only attribute names allowed are those specified by the language.
+User attribute names are not allowed.
+
+Reason: Consequence of the `NoUserAttributes` rule (but extended to
+tool attribute).
+
+==== [EntityItems] [M] Entity declarative items
+
+The only declarative items allowed in entity declarations are:
+
+* attribute declarations
+* attribute declarations
+
+The only concurrent statement allowed in entity declarations is:
+
+* assertions
+
+Reason: Obscure features, but assertions may be used to document the
+interface, and the only place to specify attributes for ports and generics
+are within the entity declarations.
+
+==== [NoCharEnumLit] [M] Character as enumeration literal
+
+All user defined enumeration must use names for literals.  Characters
+are not allowed.
+
+Reason: Use of characters is always special and reserved for bit and strings.
+
+==== [GuardedSignals] [M] Guarded signals
+
+Guarded signals (bus or register signal kind) are not allowed.
+
+Reason: Usually not supported by synthesis tools.
+
+==== [Disconnection] [M] Disconnection Specification
+
+Disconnection specifications are not allowed.
+
+Reason: Useless and guarded signals are not allowed.
+
+==== [BlockStatement] [M] Block statements
+
+Block statements can be used to group concurrent statements or to
+create a scope for declarations. Ports, generics and implicit GUARD
+signals are not allowed in block statements (therefore port maps and
+generic maps are also not allowed).
+
+Reason: Mostly useless features.
+
+==== [GroupDeclaration] [M] Group and group template
+
+Group template declarations and group declarations are not allowed.
+
+Reason: Useless feature
+
+==== [PortMode] [M] Buffer and linkage mode
+
+The modes `linkage` and `buffer` are not allowed.
+If you need to read from an output port, use an intermediate signal.
+
+Reason: Obscure features.
+
+==== [ConfigSpec] [M] Configuration specification
+
+Configuration specifications are not allowed.
+
+Reason: Obscure and mostly useless feature.
+
+
 === Synthesis rules
+
+==== [RemovedSynth] [M] Language features not allowed for synthesis
+
+These following features must not be used for synthesizable units:
+
+* Configuration declarations for synthesis.
+* Function declarations with an operator symbol.
+* Resolution function other than resolved defined in ieee.std_logic_1164.
+* New integer and physical type declaration.
+* Wait statement.
+
+Reason: They are often not supported by synthesis tools.
 
 ==== [PortsType] [M] Type of top-level ports
 
