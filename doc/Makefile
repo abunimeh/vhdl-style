@@ -14,4 +14,8 @@ $(NAME).xml: $(NAME).adoc
 clean:
 	$(RM) $(NAME).html $(NAME).xml $(NAME).pdf
 
-.PHONY: clean
+# Display all the rules
+rules:
+	sed -e '/^==== /s/^==== //p' -n $(NAME).adoc
+
+.PHONY: clean rules
