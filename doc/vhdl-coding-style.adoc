@@ -255,6 +255,45 @@ The indentation is two spaces.  Identation is used:
 * for nested concurrent or sequential statements
 * for the second and later lines of a multi-line declaration or statement.
 
+The only exception to this rule is for case statements: statements in
+alternative must also be indented except when there is only one simple
+statement.  In the latter case the simple statement can directly
+follow the `=>`.
+
+Example:
+[source]
+----
+  case addr(2 downto 0) is
+     when "000"  => s <= "010";
+     when "001"  => s <= "001";
+     when others => s <= "000";
+  end case;
+----
+
+The `end` of complex constructions must be on the same column as the first
+token of the construction.
+
+Example:
+[source]
+----
+ entity my_ent is
+ end my_ent;
+---
+
+Complex constructions must have elements on the same column:
+
+* for if statements: `if`, `elsif` and `else`
+
+The `begin` and the `end` must always be on the same column.  This rules
+concerns the following constructs:
+
+* architecture body
+* block statement
+* entity declaration
+* generate statement body
+* process statement
+* subprogram body
+
 Reason: Indentation makes code structure clearer; 2 spaces is an
 historical choice.
 
@@ -375,7 +414,6 @@ Reason: Alignment makes code easier to read.
 For the `if` statement, the `then` must be on the same line as the `if` or
 the `elsif`, unless the condition is too long.  In the latter case,
 the `then` must be on the same column as the related `if` or `elsif`.
-The `if`, `elif` and `end if` must be on the same column.
 
 Example:
 [source]
@@ -405,12 +443,9 @@ Example:
 ----
 
 For `case` statement, the `is` must be on the same line or the same
-column as the `case`.  Alternative must be indented.  Statements in
-alternative must also be indented except when there is only one simple
-statement.  In the latter case the simple statement can directly
-follow the `=>`.
+column as the `case`.
 
-Example
+Example:
 [source]
 ----
   case state is
@@ -421,26 +456,15 @@ Example
   end case;
 ----
 
-[source]
-----
-  case addr(2 downto 0) is
-     when "000"  => s <= "010";
-     when "001"  => s <= "001";
-     when others => s <= "000";
-  end case;
-----
-
-
 Reason: Makes easier to identify nested statements.
 
-==== [BeginEndLayout] [M] Layout of begin/end keywords
+==== [SubprgIsLayout] [M] Layout of is keyword in subprogram
 
 In many VHDL constructs, `is` introduces declarations, `begin` statements and
 `end` terminates the statements.
 
-The `begin` and the `end` must always be on the same column.  If there are
-declarations, the `is` must be on a new line otherwise it must be on the same
-line.
+For subprogram bodies, if there are declarations the `is` must be on a
+new line otherwise it must be on the same line.
 
 Examples:
 [source]
@@ -648,7 +672,7 @@ User declared types and subtypes must have the 't_' prefix.
 
 Reason: Makes purpose of the type more obvious.
 
-==== [PackageName] [M] Packages name
+==== [PackagesName] [M] Packages name
 
 The name of packages must have the '_pkg' suffix.
 No entity can have that suffix.
