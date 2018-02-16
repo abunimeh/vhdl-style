@@ -1,0 +1,7 @@
+*~
+*.pyc
+__pycache__
+*.egg-info
+doc/vhdl-coding-style.html
+doc/vhdl-coding-style.pdf
+doc/vhdl-coding-style.xml
