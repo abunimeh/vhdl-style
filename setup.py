@@ -1,6 +1,15 @@
-"""A setuptools setup module for vhdllint."""
+"""Distutils script for vhdllint."""
 
-from cx_Freeze import setup, Executable
+try:
+    # In the case cx_Freeze is installed.
+    from cx_Freeze import setup, Executable
+    import os
+    exe = {'nt': '.exe'}.get(os.name, '')
+    kwargs = {'executables': [Executable('vhdllint-ohwr',
+                                         targetName='vhdllint-ohwr' + exe)]}
+except ImportError:
+    from setuptools import setup
+    kwargs = {'scripts': ['vhdllint-ohwr']}
 
 setup(
     name='vhdllint',
@@ -39,6 +48,5 @@ setup(
               'vhdllint.semrules', 'vhdllint.syntaxrules',
               'vhdllint.synthrules'],
     install_requires=['libghdl'],
-    executables=[Executable('ohwr.py',
-                            targetName='vhdllint-ohwr.exe')]
+    **kwargs
 )
