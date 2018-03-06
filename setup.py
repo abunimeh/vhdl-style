@@ -1,6 +1,6 @@
 """A setuptools setup module for vhdllint."""
 
-from setuptools import setup
+from cx_Freeze import setup, Executable
 
 setup(
     name='vhdllint',
@@ -35,11 +35,10 @@ setup(
     ],
 
     keywords='checker linter lint vhdl',
-    packages=["vhdllint"],
+    packages=['vhdllint', 'vhdllint.filerules', 'vhdllint.lexrules',
+              'vhdllint.semrules', 'vhdllint.syntaxrules',
+              'vhdllint.synthrules'],
     install_requires=['libghdl'],
-    entry_points={
-        'console_scripts': [
-            'vhdllint-ohwr = vhdllint.ohwr.main'
-        ]
-    }
+    executables=[Executable('ohwr.py',
+                            targetName='vhdllint-ohwr.exe')]
 )

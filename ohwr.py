@@ -3,56 +3,56 @@
 # VHDL linter for OHWR coding style
 
 import sys
-import rulesexec
+import vhdllint.rulesexec
 import libghdl.thin
 import libghdl.iirs as iirs
 
 # Import all rules
-from filerules.check_line_length import CheckLineLength
-from filerules.check_no_blank_line_at_eof import CheckNoBlankLineAtEOF
-from filerules.check_missing_newline import CheckMissingNewline
-from filerules.check_no_tab import CheckNoTAB
-from filerules.check_no_trailing_spaces import CheckNoTrailingSpaces
-from filerules.check_newline import CheckNewline
-from filerules.check_header import CheckHeader
-from filerules.check_charset import CheckCharSet
-from lexrules.check_keyword_case import CheckKeywordCase
-from lexrules.check_comments import CheckComments
-from lexrules.check_spaces import CheckSpaces
-from syntaxrules.check_attribute_decl import CheckAttributeDecl
-from syntaxrules.check_attribute_name import CheckAttributeName
-from syntaxrules.check_entity_simple import CheckEntitySimple
-from syntaxrules.check_enum_char_lit import CheckEnumCharLit
-from syntaxrules.check_guarded_signals import CheckGuardedSignals
-from syntaxrules.check_disconnection import CheckDisconnection
-from syntaxrules.check_simple_block import CheckSimpleBlock
-from syntaxrules.check_group import CheckGroup
-from syntaxrules.check_ports_mode import CheckPortsMode
-from syntaxrules.check_config_spec import CheckConfigSpec
-from syntaxrules.check_file_name import CheckFileName
-from syntaxrules.check_one_unit import CheckOneUnit
-from syntaxrules.check_generics import CheckGenerics
-from syntaxrules.check_ports_name import CheckPortsName
-from syntaxrules.check_basic_indent import CheckBasicIndent
-from syntaxrules.check_name_decl import CheckNameDecl
-from syntaxrules.check_ieee_packages import CheckIeeePackages
-from syntaxrules.check_signals_name import CheckSignalsName
-from syntaxrules.check_context_use import CheckContextUse
-from syntaxrules.check_end_label import CheckEndLabel
-from syntaxrules.check_parenthesis import CheckParenthesis
-from syntaxrules.check_process_label import CheckProcessLabel
-from syntaxrules.check_subprg_is_layout import CheckSubprgIsLayout
-from syntaxrules.check_complex_stmt_layout import CheckComplexStmtLayout
-from syntaxrules.check_instantiation import CheckInstantiation
-from syntaxrules.check_entity_layout import CheckEntityLayout
-from syntaxrules.check_context_clauses import CheckContextClauses
+from vhdllint.filerules.check_line_length import CheckLineLength
+from vhdllint.filerules.check_no_blank_line_at_eof import CheckNoBlankLineAtEOF
+from vhdllint.filerules.check_missing_newline import CheckMissingNewline
+from vhdllint.filerules.check_no_tab import CheckNoTAB
+from vhdllint.filerules.check_no_trailing_spaces import CheckNoTrailingSpaces
+from vhdllint.filerules.check_newline import CheckNewline
+from vhdllint.filerules.check_header import CheckHeader
+from vhdllint.filerules.check_charset import CheckCharSet
+from vhdllint.lexrules.check_keyword_case import CheckKeywordCase
+from vhdllint.lexrules.check_comments import CheckComments
+from vhdllint.lexrules.check_spaces import CheckSpaces
+from vhdllint.syntaxrules.check_attribute_decl import CheckAttributeDecl
+from vhdllint.syntaxrules.check_attribute_name import CheckAttributeName
+from vhdllint.syntaxrules.check_entity_simple import CheckEntitySimple
+from vhdllint.syntaxrules.check_enum_char_lit import CheckEnumCharLit
+from vhdllint.syntaxrules.check_guarded_signals import CheckGuardedSignals
+from vhdllint.syntaxrules.check_disconnection import CheckDisconnection
+from vhdllint.syntaxrules.check_simple_block import CheckSimpleBlock
+from vhdllint.syntaxrules.check_group import CheckGroup
+from vhdllint.syntaxrules.check_ports_mode import CheckPortsMode
+from vhdllint.syntaxrules.check_config_spec import CheckConfigSpec
+from vhdllint.syntaxrules.check_file_name import CheckFileName
+from vhdllint.syntaxrules.check_one_unit import CheckOneUnit
+from vhdllint.syntaxrules.check_generics import CheckGenerics
+from vhdllint.syntaxrules.check_ports_name import CheckPortsName
+from vhdllint.syntaxrules.check_basic_indent import CheckBasicIndent
+from vhdllint.syntaxrules.check_name_decl import CheckNameDecl
+from vhdllint.syntaxrules.check_ieee_packages import CheckIeeePackages
+from vhdllint.syntaxrules.check_signals_name import CheckSignalsName
+from vhdllint.syntaxrules.check_context_use import CheckContextUse
+from vhdllint.syntaxrules.check_end_label import CheckEndLabel
+from vhdllint.syntaxrules.check_parenthesis import CheckParenthesis
+from vhdllint.syntaxrules.check_process_label import CheckProcessLabel
+from vhdllint.syntaxrules.check_subprg_is_layout import CheckSubprgIsLayout
+from vhdllint.syntaxrules.check_complex_stmt_layout import CheckComplexStmtLayout
+from vhdllint.syntaxrules.check_instantiation import CheckInstantiation
+from vhdllint.syntaxrules.check_entity_layout import CheckEntityLayout
+from vhdllint.syntaxrules.check_context_clauses import CheckContextClauses
 
 # [VHDLVersion] [M] VHDL standard version
 # There is no specific rule, the analyzer will catch errors
 libghdl.thin.set_option("--std=93c")
 
 # Create rules
-rules = rulesexec.RulesExec()
+rules = vhdllint.rulesexec.RulesExec()
 
 # List of rules (v1.0):
 
@@ -248,4 +248,4 @@ rules.add(CheckConfigSpec())
 
 # [FSMCoding] [R] FSM code style
 
-rulesexec.execute_and_report(rules, sys.argv[1:])
+vhdllint.rulesexec.execute_and_report(rules, sys.argv[1:])
