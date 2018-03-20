@@ -147,11 +147,14 @@ rules.add(CheckNameDecl(kind=iirs.Iir_Kind.Architecture_Body,
                         name='ArchNames'))
 
 # [Constants] [M] Constants name
-rules.add(CheckNameDecl(kind=iirs.Iir_Kind.Constant_Declaration,
-                        predicate=(lambda n: len(n) >= 3
-                                   and n[:2] == 'c_'
-                                   and n[2:].isupper()),
-                        name='Constants'))
+rules.add(CheckNameDecl(
+    kind=iirs.Iir_Kind.Constant_Declaration,
+    predicate=[lambda s: ("constant name '{}' must start with 'c_'".format(s)
+                          if not s.startswith('c_') else None),
+               lambda s: (
+                "constant name '{}' must be in upper case after 'c_'".format(s)
+                if not s[2:].isupper() else None)],
+    name='Constants'))
 
 # [GenericsName] [M] Generics name
 rules.add(CheckGenerics(name='GenericsName'))
