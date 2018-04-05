@@ -1,0 +1,54 @@
+# OHWR vhdl-style document
+
+This project contains the VHDL style document (in doc/) and the tool to
+check the rules (ohwr.py).
+
+Currently, all the mandatory rules except [ReferenceName] and those
+for synthesis are implemented.  However there may be some minor points
+in the rules that aren't fully checked.  The set of rules implemented don't
+need a full analysis of the files, so you don't need to deal with dependencies,
+any file can be checked.
+
+# Tool usage
+
+vhdllint-ohwr FILES...
+
+# Building the tool.
+
+You first need to build libghdl for python.  Download github.com/ghdl/ghdl.git,
+configure, make, and then execute: python setup.py install
+
+Then execute in this directory: python setup.py install
+
+(You can add --user for a local installation).
+
+# Using cx_Freeze
+
+Tested on windows; you need to manually copy libgnat-xx.dll in the lib/
+subdirectory of the cx_Freeze result, as this library is needed by libghdl.
+
+The result of cx_Freeze 5.1.1 wasn't working on Windows unless I use this
+patch:
+
+*** source/bases/Common.c.orig	2018-03-05 15:40:09.000000001 +0100
+--- source/bases/Common.c	2018-03-06 14:22:21.000000001 +0100
+***************
+*** 18,27 ****
+--- 18,34 ----
+
+  // define code for Python 2.x to set sys.path
+  // can't use os.path, due to only `sys` module loaded at this point
++ #if defined(MS_WINDOWS)
++ #define CX_SET_PATH_CODE \
++     "import sys\n" \
++     "lib = sys.exec_prefix + '\\\\lib\\\\'\n" \
++     "sys.path = [lib, lib + 'library.zip']\n"
++ #else
+  #define CX_SET_PATH_CODE \
+      "import sys\n" \
+      "lib = sys.exec_prefix + '/lib'\n" \
+      "sys.path = [lib, lib + '/library.zip']\n"
++ #endif
+
+  // define names that will work for both Python 2 and 3
+  #if PY_MAJOR_VERSION >= 3
