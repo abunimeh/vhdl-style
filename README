@@ -9,18 +9,27 @@ in the rules that aren't fully checked.  The set of rules implemented don't
 need a full analysis of the files, so you don't need to deal with dependencies,
 any file can be checked.
 
+
 # Tool usage
 
 vhdllint-ohwr FILES...
 
+
 # Building the tool.
 
-You first need to build libghdl for python.  Download github.com/ghdl/ghdl.git,
-configure, make, and then execute: python setup.py install
+You first need to build libghdl for python:
+Download github.com/ghdl/ghdl.git
+Execute the following commands:
+cd ghdl
+configure --enable-python
+make -C src/vhdl
+make
+python setup.py install
 
-Then execute in this directory: python setup.py install
+Then execute in this directory (vhdl-style): python setup.py install
 
 (You can add --user for a local installation).
+
 
 # Using cx_Freeze
 
